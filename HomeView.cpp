@@ -18,7 +18,9 @@ void HomeView::setUserList(QStringList list) {
 }
 
 void HomeView::on_callButton_clicked() {
+    // start a new video chat
     QString selectedUser = ui->userList->selectionModel()->currentIndex().data().toString().trimmed();
     videoChat = new VideoChatWindow();
+    videoChat->setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose);
     videoChat->show();
 }

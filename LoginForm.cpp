@@ -19,10 +19,19 @@ void LoginForm::setError(QString err) {
 }
 
 void LoginForm::on_login_clicked() {
+    // invoke callback to main application
     LoginHandler handler = app->getLoginHandler();
     if (handler) {
         handler(ui->username->text().toStdString(), ui->password->text().toStdString());
     } else {
         fprintf(stderr, "no valid loginHandler target");
     }
+}
+
+void LoginForm::on_username_returnPressed() {
+    on_login_clicked();
+}
+
+void LoginForm::on_password_returnPressed() {
+    on_login_clicked();
 }

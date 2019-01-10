@@ -7,6 +7,10 @@ CaptureWorker::CaptureWorker(QObject *parent) : QObject(parent) {
     video.open(0);
 }
 
+CaptureWorker::~CaptureWorker() {
+    video.release();
+}
+
 void CaptureWorker::captureFrame() {
     cv::Mat frame;
     video >> frame;

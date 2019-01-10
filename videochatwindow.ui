@@ -13,24 +13,51 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QWidget" name="gridLayoutWidget">
+  <widget class="QWidget" name="verticalLayoutWidget">
    <property name="geometry">
     <rect>
      <x>9</x>
      <y>9</y>
-     <width>691</width>
+     <width>681</width>
      <height>481</height>
     </rect>
    </property>
-   <layout class="QGridLayout" name="gridLayout">
-    <property name="horizontalSpacing">
-     <number>20</number>
-    </property>
-    <item row="0" column="0">
-     <widget class="QGraphicsView" name="localCam"/>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <layout class="QHBoxLayout" name="videoPanels">
+      <item>
+       <widget class="QGraphicsView" name="localCam">
+        <property name="lineWidth">
+         <number>1</number>
+        </property>
+        <property name="verticalScrollBarPolicy">
+         <enum>Qt::ScrollBarAsNeeded</enum>
+        </property>
+        <property name="horizontalScrollBarPolicy">
+         <enum>Qt::ScrollBarAsNeeded</enum>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGraphicsView" name="remoteCam"/>
+      </item>
+     </layout>
     </item>
-    <item row="0" column="1">
-     <widget class="QGraphicsView" name="remoteCam"/>
+    <item>
+     <layout class="QVBoxLayout" name="chat">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetDefaultConstraint</enum>
+      </property>
+      <item>
+       <widget class="QTextBrowser" name="chatBrowser"/>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="chatEdit"/>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>

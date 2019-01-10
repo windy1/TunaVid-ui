@@ -11,6 +11,10 @@ typedef std::function<void(std::string, std::string)> LoginHandler;
 
 namespace Ui {
 
+/**
+ * The main interface between the UI and the rest of the application. Note:
+ * there must not be any includes outside of std.
+ */
 class TunaVid {
 
     LoginHandler loginHandler;

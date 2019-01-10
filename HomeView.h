@@ -7,7 +7,7 @@
 #include "VideoChatWindow.h"
 
 namespace Ui {
-class HomeView;
+    class HomeView;
 }
 
 class HomeView : public QWidget {

@@ -5,6 +5,10 @@
 
 #include "opencv2/opencv.hpp"
 
+/**
+ * This class is responsible for capturing video frames from the user's camera
+ * and emitting signals with frames to the UI thread.
+ */
 class CaptureWorker : public QObject {
 
     Q_OBJECT
@@ -12,6 +16,8 @@ class CaptureWorker : public QObject {
 public:
 
     explicit CaptureWorker(QObject *parent = nullptr);
+
+    ~CaptureWorker();
 
 signals:
 

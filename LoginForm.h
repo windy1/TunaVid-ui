@@ -31,6 +31,10 @@ private slots:
 
     void on_login_clicked();
 
+    void on_username_returnPressed();
+
+    void on_password_returnPressed();
+
 };
 
 #endif // LOGINFORM_H
