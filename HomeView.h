@@ -20,13 +20,15 @@ public:
 
     ~HomeView();
 
-    void setUserList(QStringList list);
-
 private:
 
     Ui::HomeView *ui;
     QStringListModel *userList;
     VideoChatWindow *videoChat;
+
+public slots:
+
+    void setUserList(QStringList list);
 
 private slots:
 

@@ -1,6 +1,8 @@
 #include "LoginForm.h"
 #include "ui_loginform.h"
 #include "TunaVid.h"
+#include "StdAdapter.h"
+#include <QtDebug>
 
 LoginForm::LoginForm(QWidget *parent) : QWidget(parent), ui(new Ui::LoginForm) {
     ui->setupUi(this);
@@ -14,7 +16,7 @@ LoginForm::~LoginForm() {
     delete ui;
 }
 
-void LoginForm::setError(QString err) {
+void LoginForm::setError(const QString &err) {
     ui->error->setText(err);
 }
 

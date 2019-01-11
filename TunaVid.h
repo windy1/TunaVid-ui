@@ -6,6 +6,7 @@
 #include <vector>
 
 class MainWindow;
+class StdAdapter;
 
 typedef std::function<void(std::string, std::string)> LoginHandler;
 
@@ -19,6 +20,7 @@ class TunaVid {
 
     LoginHandler loginHandler;
     MainWindow *main;
+    StdAdapter *adapter;
 
 public:
 
@@ -28,11 +30,13 @@ public:
 
     LoginHandler getLoginHandler() const;
 
-    void postError(std::string error);
+    void postError(const std::string &error);
 
-    void setUserList(std::vector<std::string> list);
+    void setUserList(const std::vector<std::string> &list);
 
     void showHome();
+
+    StdAdapter* getAdapter() const;
 
 };
 

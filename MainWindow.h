@@ -12,6 +12,7 @@ namespace Ui {
 }
 
 class MainWindow : public QMainWindow {
+
     Q_OBJECT
 
 public:
@@ -26,7 +27,11 @@ public:
 
     HomeView* getHome() const;
 
+public slots:
+
     void showHome();
+
+    void onEventLoopStart();
 
 private:
 

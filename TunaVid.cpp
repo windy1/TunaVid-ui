@@ -1,15 +1,19 @@
 #include "TunaVid.h"
 #include "MainWindow.h"
+#include "StdAdapter.h"
 #include <QApplication>
+#include <QtDebug>
 
 namespace Ui {
 
 int TunaVid::start(int argc, char *argv[]) {
     QApplication app(argc, argv);
+    StdAdapter adapter;
+    this->adapter = &adapter;
     ::MainWindow window(this);
     main = &window;
-    setUserList({"test1", "test2", "test3"});
     window.show();
+    QTimer::singleShot(0, &window, &::MainWindow::onEventLoopStart);
     return app.exec();
 }
 
@@ -21,20 +25,20 @@ LoginHandler TunaVid::getLoginHandler() const {
     return loginHandler;
 }
 
-void TunaVid::postError(std::string error) {
-    main->getLogin()->setError(QString::fromStdString(error));
+void TunaVid::postError(const std::string &error) {
+    adapter->postError(error);
 }
 
-void TunaVid::setUserList(std::vector<std::string> list) {
-    QStringList userList;
-    for (auto &username : list) {
-        userList.append(QString::fromStdString(username));
-    }
-    main->getHome()->setUserList(userList);
+void TunaVid::setUserList(const std::vector<std::string> &list) {
+    adapter->setUserList(list);
 }
 
 void TunaVid::showHome() {
-    main->showHome();
+    adapter->showHome();
+}
+
+StdAdapter* TunaVid::getAdapter() const {
+    return adapter;
 }
 
 }

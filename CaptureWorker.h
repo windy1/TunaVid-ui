@@ -23,6 +23,8 @@ signals:
 
     void frameCaptured(const QPixmap &pixmap);
 
+    void frameCapturedImg(const QImage &img);
+
 public slots:
 
     void captureFrame();

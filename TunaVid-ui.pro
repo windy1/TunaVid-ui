@@ -23,13 +23,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++17
 
 SOURCES += \
-        main.cpp \
     MainWindow.cpp \
     TunaVid.cpp \
     LoginForm.cpp \
     HomeView.cpp \
     VideoChatWindow.cpp \
-    CaptureWorker.cpp
+    CaptureWorker.cpp \
+    VideoOutputStreamWorker.cpp \
+    StdAdapter.cpp
 
 HEADERS += \
     MainWindow.h \
@@ -37,7 +38,9 @@ HEADERS += \
     LoginForm.h \
     HomeView.h \
     VideoChatWindow.h \
-    CaptureWorker.h
+    CaptureWorker.h \
+    VideoOutputStreamWorker.h \
+    StdAdapter.h
 
 FORMS += \
         mainwindow.ui \

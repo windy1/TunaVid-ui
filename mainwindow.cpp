@@ -1,5 +1,7 @@
 #include "MainWindow.h"
 #include "ui_mainwindow.h"
+#include "StdAdapter.h"
+#include <QtDebug>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
@@ -27,4 +29,10 @@ HomeView* MainWindow::getHome() const {
 
 void MainWindow::showHome() {
     ui->stack->setCurrentIndex(1);
+}
+
+void MainWindow::onEventLoopStart() {
+    connect(app->getAdapter(), &StdAdapter::homeRequest, this, &MainWindow::showHome);
+    connect(app->getAdapter(), &StdAdapter::errorPosted, login, &LoginForm::setError);
+    connect(app->getAdapter(), &StdAdapter::userListUpdated, home, &HomeView::setUserList);
 }

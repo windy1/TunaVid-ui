@@ -20,8 +20,6 @@ public:
 
     ~LoginForm();
 
-    void setError(QString err);
-
 private:
 
     Ui::LoginForm *ui;
@@ -34,6 +32,10 @@ private slots:
     void on_username_returnPressed();
 
     void on_password_returnPressed();
+
+public slots:
+
+    void setError(const QString &error);
 
 };
 
