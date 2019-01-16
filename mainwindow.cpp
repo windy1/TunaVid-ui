@@ -1,6 +1,8 @@
 #include "MainWindow.h"
 #include "ui_mainwindow.h"
 #include "StdAdapter.h"
+#include "CallAlert.h"
+#include "VideoChatWindow.h"
 #include <QtDebug>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -10,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 MainWindow::MainWindow(Ui::TunaVid *app) : MainWindow() {
     this->app = app;
     ui->stack->addWidget(login = new LoginForm(app));
-    ui->stack->addWidget(home = new HomeView());
+    ui->stack->addWidget(home = new HomeView(app));
 }
 
 MainWindow::~MainWindow() {
@@ -33,6 +35,7 @@ void MainWindow::showHome() {
 
 void MainWindow::onEventLoopStart() {
     connect(app->getAdapter(), &StdAdapter::homeRequest, this, &MainWindow::showHome);
+    connect(app->getAdapter(), &StdAdapter::callIncoming, home, &HomeView::showCallAlert);
     connect(app->getAdapter(), &StdAdapter::errorPosted, login, &LoginForm::setError);
     connect(app->getAdapter(), &StdAdapter::userListUpdated, home, &HomeView::setUserList);
 }

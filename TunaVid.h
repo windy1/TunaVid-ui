@@ -8,7 +8,11 @@
 class MainWindow;
 class StdAdapter;
 
-typedef std::function<void(std::string, std::string)> LoginHandler;
+enum CallAction { Start, Accept, Ignore };
+
+typedef std::function<void(const std::string&, const std::string&)> LoginHandler;
+typedef std::function<void(const std::string&, CallAction)> CallHandler;
+typedef std::function<void(const std::string&)> CaptureHandler;
 
 namespace Ui {
 
@@ -19,6 +23,8 @@ namespace Ui {
 class TunaVid {
 
     LoginHandler loginHandler;
+    CallHandler callHandler;
+    CaptureHandler captureHandler;
     MainWindow *main;
     StdAdapter *adapter;
 
@@ -28,13 +34,33 @@ public:
 
     void setLoginHandler(LoginHandler loginHandler);
 
+    void setCallHandler(CallHandler callHandler);
+
+    void setCaptureHandler(CaptureHandler captureHandler);
+
     LoginHandler getLoginHandler() const;
+
+    CallHandler getCallHandler() const;
+
+    CaptureHandler getCaptureHandler() const;
 
     void postError(const std::string &error);
 
     void setUserList(const std::vector<std::string> &list);
 
+    void getUserList(std::vector<std::string> &list) const;
+
+    void addUser(const std::string &username);
+
+    void removeUser(const std::string &username);
+
     void showHome();
+
+    void showCallAlert(const std::string &sender);
+
+    void startWritingFrames();
+
+    void receiveFrame(const std::string &imageData);
 
     StdAdapter* getAdapter() const;
 

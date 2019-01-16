@@ -5,6 +5,7 @@
 #include <QStringListModel>
 
 #include "VideoChatWindow.h"
+#include "TunaVid.h"
 
 namespace Ui {
     class HomeView;
@@ -16,19 +17,29 @@ class HomeView : public QWidget {
 
 public:
 
-    explicit HomeView(QWidget *parent = nullptr);
+    explicit HomeView(Ui::TunaVid *app, QWidget *parent = nullptr);
 
     ~HomeView();
 
+    QStringList getUserList() const;
+
+    VideoChatWindow* getVideoChat() const;
+
 private:
 
+    Ui::TunaVid *app;
     Ui::HomeView *ui;
     QStringListModel *userList;
     VideoChatWindow *videoChat;
+    QString incomingSender;
 
 public slots:
 
-    void setUserList(QStringList list);
+    void setUserList(const QStringList &list);
+
+    void showCallAlert(const QString &sender);
+
+    void acceptCall();
 
 private slots:
 

@@ -15,7 +15,13 @@ public:
 
     void setUserList(const std::vector<std::string> &list);
 
+    void setUserList(const QStringList &list);
+
     void showHome();
+
+    void showCallAlert(const std::string &sender);
+
+    void receiveFrame(const std::string &imageData);
 
 signals:
 
@@ -24,6 +30,10 @@ signals:
     void userListUpdated(const QStringList &userList);
 
     void homeRequest();
+
+    void callIncoming(const QString &sender);
+
+    void frameReceived(const char *data, int size);
 
 };
 

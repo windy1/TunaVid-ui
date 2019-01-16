@@ -7,6 +7,8 @@
 #include <QTimer>
 
 #include "opencv2/opencv.hpp"
+#include "TunaVid.h"
+#include "CaptureWorker.h"
 
 namespace Ui {
     class VideoChatWindow;
@@ -18,21 +20,41 @@ class VideoChatWindow : public QWidget {
 
 public:
 
-    explicit VideoChatWindow(QWidget *parent = nullptr);
+    explicit VideoChatWindow(Ui::TunaVid *app, const QString &receiver, QWidget *parent = nullptr);
 
     ~VideoChatWindow();
 
+    void startCall();
+
+    void acceptCall();
+
+    void startWritingFrames();
+
 public slots:
 
-    void renderFrame(const QPixmap &pixmap);
+    void renderLocalFrame(const QPixmap &localPixmap);
+
+    void renderRemoteFrame(const QPixmap &localPixmap);
+
+    void frameOut(const QByteArray &data);
 
 private:
 
+    Ui::TunaVid *app;
+    QString receiver;
     Ui::VideoChatWindow *ui;
-    QGraphicsPixmapItem pixmap;
+    QGraphicsPixmapItem localPixmap;
+    QGraphicsPixmapItem remotePixmap;
     cv::VideoCapture video;
+    CaptureWorker *captureWorker;
     QThread workerThread;
+    QThread writerThread;
+    QThread readerThread;
     QTimer *timer;
+
+    void initLocalCam();
+
+    void initRemoteCam();
 
 };
 

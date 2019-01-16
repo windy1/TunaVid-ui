@@ -16,7 +16,8 @@ void CaptureWorker::captureFrame() {
     video >> frame;
     if (!frame.empty()) {
         QImage img(frame.data, frame.cols, frame.rows, frame.step, QImage::Format_RGB888);
-        QPixmap pixmap = QPixmap::fromImage(img.rgbSwapped().mirrored(true, false));
+        img = img.rgbSwapped().mirrored(true, false);
+        QPixmap pixmap = QPixmap::fromImage(img);
         emit frameCaptured(pixmap);
         emit frameCapturedImg(img);
     }

@@ -29,8 +29,10 @@ SOURCES += \
     HomeView.cpp \
     VideoChatWindow.cpp \
     CaptureWorker.cpp \
-    VideoOutputStreamWorker.cpp \
-    StdAdapter.cpp
+    StdAdapter.cpp \
+    CallAlert.cpp \
+    FrameWriter.cpp \
+    FrameReader.cpp
 
 HEADERS += \
     MainWindow.h \
@@ -39,14 +41,17 @@ HEADERS += \
     HomeView.h \
     VideoChatWindow.h \
     CaptureWorker.h \
-    VideoOutputStreamWorker.h \
-    StdAdapter.h
+    StdAdapter.h \
+    CallAlert.h \
+    FrameWriter.h \
+    FrameReader.h
 
 FORMS += \
         mainwindow.ui \
     loginform.ui \
     homeview.ui \
-    videochatwindow.ui
+    videochatwindow.ui \
+    callalert.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
