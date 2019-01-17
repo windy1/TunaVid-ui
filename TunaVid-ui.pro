@@ -32,7 +32,10 @@ SOURCES += \
     StdAdapter.cpp \
     CallAlert.cpp \
     FrameWriter.cpp \
-    FrameReader.cpp
+    FrameReader.cpp \
+    ServerMonitorUi.cpp \
+    ServerMonitorWindow.cpp \
+    ServerMonitorAdapter.cpp
 
 HEADERS += \
     MainWindow.h \
@@ -44,14 +47,18 @@ HEADERS += \
     StdAdapter.h \
     CallAlert.h \
     FrameWriter.h \
-    FrameReader.h
+    FrameReader.h \
+    ServerMonitorUi.h \
+    ServerMonitorWindow.h \
+    ServerMonitorAdapter.h
 
 FORMS += \
-        mainwindow.ui \
+    mainwindow.ui \
     loginform.ui \
     homeview.ui \
     videochatwindow.ui \
-    callalert.ui
+    callalert.ui \
+    servermonitorwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
