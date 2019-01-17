@@ -9,20 +9,31 @@
 #include "StdAdapter.h"
 
 VideoChatWindow::VideoChatWindow(Ui::TunaVid *app, const QString &receiver, QWidget *parent)
-        : QWidget(parent), app(app), receiver(receiver), ui(new Ui::VideoChatWindow) {
+        : QWidget(parent),
+          app(app),
+          receiver(receiver),
+          ui(new Ui::VideoChatWindow) {
     ui->setupUi(this);
     setWindowTitle("Video chat with " + receiver);
     initLocalCam();
     initRemoteCam();
+    connect(app->getAdapter(), &StdAdapter::callOpened, this, &VideoChatWindow::startWritingFrames);
+    connect(app->getAdapter(), &StdAdapter::frameReceived, this, &VideoChatWindow::frameIn);
 }
 
 VideoChatWindow::~VideoChatWindow() {
-    timer->stop();
+    captureTimer->stop();
+    readerTimer->stop();
+    renderTimer->stop();
     workerThread.quit();
     workerThread.wait();
     writerThread.quit();
     writerThread.wait();
-    delete timer;
+    readerThread.quit();
+    readerThread.wait();
+    delete captureTimer;
+    delete readerTimer;
+    delete renderTimer;
     delete ui;
 }
 
@@ -47,6 +58,11 @@ void VideoChatWindow::frameOut(const QByteArray &data) {
     }
 }
 
+void VideoChatWindow::frameIn(const QByteArray &data) {
+    qDebug() << "frameIn()";
+    frameBufferRaw.enqueue(data);
+}
+
 void VideoChatWindow::startWritingFrames() {
     FrameWriter *writer = new FrameWriter();
     writer->moveToThread(&writerThread);
@@ -55,12 +71,20 @@ void VideoChatWindow::startWritingFrames() {
     connect(&writerThread, &QThread::finished, writer, &QObject::deleteLater);
     writerThread.start();
 
-    FrameReader *reader = new FrameReader();
+    qDebug() << "starting FrameReader";
+
+    reader = new FrameReader(&frameBufferRaw);
+    readerTimer = new QTimer(this);
     reader->moveToThread(&readerThread);
-    connect(app->getAdapter(), &StdAdapter::frameReceived, reader, &FrameReader::read);
-    connect(reader, &FrameReader::frameRead, this, &VideoChatWindow::renderRemoteFrame);
+    connect(readerTimer, &QTimer::timeout, reader, &FrameReader::read);
+    connect(reader, &FrameReader::frameRead, this, &VideoChatWindow::remoteFrameReady);
     connect(&readerThread, &QThread::finished, reader, &QObject::deleteLater);
     readerThread.start();
+    readerTimer->start(0);
+
+    renderTimer = new QTimer(this);
+    connect(renderTimer, &QTimer::timeout, this, &VideoChatWindow::renderRemoteFrame);
+    renderTimer->start(17);
 }
 
 void VideoChatWindow::renderLocalFrame(const QPixmap &pixmap) {
@@ -68,9 +92,19 @@ void VideoChatWindow::renderLocalFrame(const QPixmap &pixmap) {
     ui->localCam->fitInView(&localPixmap, Qt::KeepAspectRatioByExpanding);
 }
 
-void VideoChatWindow::renderRemoteFrame(const QPixmap &pixmap) {
-    remotePixmap.setPixmap(pixmap);
+void VideoChatWindow::renderRemoteFrame() {
+    if (frameBufferRender.size() < 60) {
+        qDebug() << "buffer size = " << QString::number(frameBufferRender.size());
+        return;
+    }
+    QPixmap *pixmap = &frameBufferRender.head();
+    remotePixmap.setPixmap(*pixmap);
+    frameBufferRender.dequeue();
     ui->remoteCam->fitInView(&remotePixmap, Qt::KeepAspectRatioByExpanding);
+}
+
+void VideoChatWindow::remoteFrameReady(const QPixmap &pixmap) {
+    frameBufferRender.enqueue(pixmap);
 }
 
 void VideoChatWindow::initLocalCam() {
@@ -84,16 +118,16 @@ void VideoChatWindow::initLocalCam() {
 
     // start capturing
     captureWorker = new CaptureWorker();
-    timer = new QTimer(this);
+    captureTimer = new QTimer(this);
 
     captureWorker->moveToThread(&workerThread);
 
-    connect(timer, &QTimer::timeout, captureWorker, &CaptureWorker::captureFrame);
+    connect(captureTimer, &QTimer::timeout, captureWorker, &CaptureWorker::captureFrame);
     connect(captureWorker, &CaptureWorker::frameCaptured, this, &VideoChatWindow::renderLocalFrame);
     connect(&workerThread, &QThread::finished, captureWorker, &QObject::deleteLater);
 
     workerThread.start();
-    timer->start(17);
+    captureTimer->start(17);
 }
 
 void VideoChatWindow::initRemoteCam() {

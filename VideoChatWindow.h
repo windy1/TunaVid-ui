@@ -9,6 +9,7 @@
 #include "opencv2/opencv.hpp"
 #include "TunaVid.h"
 #include "CaptureWorker.h"
+#include "FrameReader.h"
 
 namespace Ui {
     class VideoChatWindow;
@@ -28,15 +29,19 @@ public:
 
     void acceptCall();
 
-    void startWritingFrames();
-
 public slots:
 
     void renderLocalFrame(const QPixmap &localPixmap);
 
-    void renderRemoteFrame(const QPixmap &localPixmap);
+    void remoteFrameReady(const QPixmap &pixmap);
+
+    void renderRemoteFrame();
 
     void frameOut(const QByteArray &data);
+
+    void frameIn(const QByteArray &data);
+
+    void startWritingFrames();
 
 private:
 
@@ -46,11 +51,18 @@ private:
     QGraphicsPixmapItem localPixmap;
     QGraphicsPixmapItem remotePixmap;
     cv::VideoCapture video;
+
     CaptureWorker *captureWorker;
+    FrameReader *reader;
     QThread workerThread;
     QThread writerThread;
     QThread readerThread;
-    QTimer *timer;
+    QTimer *captureTimer;
+    QTimer *readerTimer;
+    QTimer *renderTimer;
+
+    QQueue<QByteArray> frameBufferRaw;
+    QQueue<QPixmap> frameBufferRender;
 
     void initLocalCam();
 

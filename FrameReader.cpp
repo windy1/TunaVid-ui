@@ -4,35 +4,46 @@
 
 #include "FrameReader.h"
 
-FrameReader::FrameReader(QObject *parent) : QObject(parent) {
-    reader = new QImageReader(&buffer, "JPEG");
+FrameReader::FrameReader(QQueue<QByteArray> *buffer, QObject *parent) : QObject(parent), buffer(buffer) {
+    reader = new QImageReader(cur, "JPEG");
 }
 
 FrameReader::~FrameReader() {
     delete reader;
 }
 
-void FrameReader::read(const char *data, int size) {
-    qDebug() << "FrameReader::read";
+void FrameReader::read() {
+    if (buffer->isEmpty()) return;
 
-    QDataStream bin(&buffer);
-    bin.writeRawData(data, size);
+    cur = new QBuffer();
 
-    if (buffer.isOpen()) buffer.close();
+    QByteArray *data = &buffer->head();
+    cur->setData(data->data(), data->size());
 
-    buffer.open(QIODevice::ReadOnly);
+    cur->open(QIODevice::ReadOnly);
+    reader->setDevice(cur);
     QImage image = reader->read();
-    buffer.close();
+    cur->close();
+
+    delete cur;
+
+    buffer->dequeue();
 
     if (image.isNull()) {
         qDebug() << "error " << reader->error() << ": " << reader->errorString();
-        QFile file("tmp.jpeg");
+        QFile file("error.jpeg");
         file.open(QFile::WriteOnly);
-        file.write(data, size);
+        file.write(data->data(), int(data->size()));
         file.close();
         return;
     }
 
     QPixmap frame = QPixmap::fromImage(image);
+
+    QFile file("pixmap.jpeg");
+    file.open(QIODevice::WriteOnly);
+    frame.save(&file, "JPEG");
+    file.close();
+
     emit frameRead(frame);
 }

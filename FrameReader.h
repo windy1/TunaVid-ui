@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QBuffer>
 #include <QImageReader>
+#include <QQueue>
 
 class FrameReader : public QObject {
 
@@ -11,7 +12,7 @@ class FrameReader : public QObject {
 
 public:
 
-    explicit FrameReader(QObject *parent = nullptr);
+    explicit FrameReader(QQueue<QByteArray> *buffer, QObject *parent = nullptr);
 
     ~FrameReader();
 
@@ -21,11 +22,12 @@ signals:
 
 public slots:
 
-    void read(const char *data, int size);
+    void read();
 
 private:
 
-    QBuffer buffer;
+    QQueue<QByteArray> *buffer;
+    QBuffer *cur;
     QImageReader *reader;
 
 };

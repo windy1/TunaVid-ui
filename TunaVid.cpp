@@ -79,11 +79,10 @@ void TunaVid::showCallAlert(const std::string &sender) {
 }
 
 void TunaVid::startWritingFrames() {
-    main->getHome()->getVideoChat()->startWritingFrames();
+    adapter->startWritingFrames();
 }
 
 void TunaVid::receiveFrame(const std::string &imageData) {
-    qDebug() << "TunaVid::receiveFrame()";
     adapter->receiveFrame(imageData);
 }
 

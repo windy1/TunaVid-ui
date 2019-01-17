@@ -1,6 +1,7 @@
 #include "HomeView.h"
 #include "ui_homeview.h"
 #include "CallAlert.h"
+#include "StdAdapter.h"
 #include <QtDebug>
 
 HomeView::HomeView(Ui::TunaVid *app, QWidget *parent)

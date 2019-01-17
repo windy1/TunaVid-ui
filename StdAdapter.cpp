@@ -1,6 +1,8 @@
 #include "StdAdapter.h"
 #include <QFile>
 #include <QDebug>
+#include <QBuffer>
+#include <QDataStream>
 
 StdAdapter::StdAdapter(QObject *parent) : QObject(parent) {}
 
@@ -28,11 +30,14 @@ void StdAdapter::showCallAlert(const std::string &sender) {
     emit callIncoming(QString::fromStdString(sender));
 }
 
+void StdAdapter::startWritingFrames() {
+    emit callOpened();
+}
+
 void StdAdapter::receiveFrame(const std::string &imageData) {
-//    QFile file("tmp_raw.jpeg");
-//    file.open(QFile::WriteOnly);
-//    file.write(imageData.c_str(), imageData.size());
-//    file.close();
-    qDebug() << "data_raw = " << imageData.c_str();
-    emit frameReceived(imageData.c_str(), imageData.size());
+    QFile file("debug.jpeg");
+    file.open(QIODevice::WriteOnly);
+    file.write(imageData.c_str(), imageData.size());
+    file.close();
+    emit frameReceived(QByteArray(imageData.c_str(), int(imageData.size())));
 }

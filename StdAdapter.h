@@ -21,6 +21,8 @@ public:
 
     void showCallAlert(const std::string &sender);
 
+    void startWritingFrames();
+
     void receiveFrame(const std::string &imageData);
 
 signals:
@@ -33,7 +35,9 @@ signals:
 
     void callIncoming(const QString &sender);
 
-    void frameReceived(const char *data, int size);
+    void callOpened();
+
+    void frameReceived(const QByteArray &data);
 
 };
 
