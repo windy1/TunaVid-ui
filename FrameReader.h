@@ -6,6 +6,10 @@
 #include <QImageReader>
 #include <QQueue>
 
+/**
+ * This class is responsible for reading incoming raw frame data as they
+ * arrive from the server and emitting QPixmap frames.
+ */
 class FrameReader : public QObject {
 
     Q_OBJECT
@@ -22,6 +26,10 @@ signals:
 
 public slots:
 
+    /**
+     * Reads the next frame from the buffer. This method does nothing if there
+     * are no frames currently in the buffer.
+     */
     void read();
 
 private:

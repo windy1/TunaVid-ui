@@ -7,6 +7,9 @@ namespace Ui {
     class CallAlert;
 }
 
+/**
+ * The dialog displayed when there is an incoming call.
+ */
 class CallAlert : public QDialog {
 
     Q_OBJECT

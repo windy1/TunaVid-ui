@@ -5,6 +5,10 @@
 #include <QBuffer>
 #include <QImageWriter>
 
+/**
+ * This class is responsible for writing QImage frame data to a QByteArray to
+ * be sent to the server.
+ */
 class FrameWriter : public QObject {
 
     Q_OBJECT
